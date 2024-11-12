@@ -28,6 +28,8 @@ export const createRepeatEventResolver = (
   return { list: initEvents, newEvents: [...initEvents, ...newEvents] };
 };
 
+// ================================================
+
 export const createEventResolver = (initEvents = [] as Event[], event: EventForm) => {
   const newEventWithId = { ...event, id: `${+initEvents[initEvents.length - 1].id + 1}` };
   initEvents.push(newEventWithId);
@@ -52,6 +54,8 @@ export const deleteEventResolver = (initEvents = [] as Event[], id: string) => {
   initEvents.splice(findIndex, 1);
   return { status: 204, list: initEvents };
 };
+
+// ================================================
 
 export const setupCreateHandler = (initEvents = [] as Event[]) => {
   const _initEvents = [...initEvents];

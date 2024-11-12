@@ -1,8 +1,8 @@
-import { act, render, screen, within } from '@testing-library/react';
+import { act, render, screen, waitFor, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import React from 'react';
 
-import { setupCreateHandler } from '@/__mocks__/handlersUtils';
+import { setupCreateHandler, setupDeleteHandler } from '@/__mocks__/handlersUtils';
 import App from '@/App';
 import { Providers } from '@/app/providers';
 import { Event, EventForm } from '@/types';
@@ -268,5 +268,67 @@ describe('반복 일정 테스트', () => {
     expect(within(calendarView).getByText('반복 일정 캘린더 2024-10-19')).toBeInTheDocument();
     expect(within(calendarView).queryByText('반복 일정 캘린더 2024-10-21')).not.toBeInTheDocument();
     expect(within(calendarView).queryByText('반복 일정 캘린더 2024-10-23')).not.toBeInTheDocument();
+  });
+  it('반복 일정 삭제 시 해당 일정만 삭제된다.', async () => {
+    const initialEvents = [
+      {
+        id: '1',
+        title: '새로운 일정',
+        date: '2024-10-15',
+        startTime: '10:00',
+        endTime: '11:00',
+        description: '새로운 일정 설명',
+        location: '새로운 장소',
+        category: '업무',
+        notificationTime: 10,
+        repeat: { type: 'daily', interval: 2, endDate: '2024-10-20' },
+      },
+      {
+        id: '2',
+        title: '새로운 일정',
+        date: '2024-10-17',
+        startTime: '10:00',
+        endTime: '11:00',
+        description: '새로운 일정 설명',
+        location: '새로운 장소',
+        category: '업무',
+        notificationTime: 10,
+        repeat: { type: 'daily', interval: 2, endDate: '2024-10-20' },
+      },
+      {
+        id: '2',
+        title: '새로운 일정',
+        date: '2024-10-19',
+        startTime: '10:00',
+        endTime: '11:00',
+        description: '새로운 일정 설명',
+        location: '새로운 장소',
+        category: '업무',
+        notificationTime: 10,
+        repeat: { type: 'daily', interval: 2, endDate: '2024-10-20' },
+      },
+    ] as Event[];
+
+    setupDeleteHandler(initialEvents);
+    renderComponent();
+
+    const calendarView = screen.getByTestId('month-view');
+
+    await waitFor(() => {
+      expect(within(calendarView).getAllByText(/반복 일정 캘린더/i)).toHaveLength(3);
+    });
+
+    const eventList = within(screen.getByTestId('event-list'));
+    const deleteButton = eventList.getAllByLabelText(/delete event/i);
+    await userEvent.click(deleteButton[1]);
+
+    // 삭제한 일정이 더 이상 조회되지 않는지 확인
+    await waitFor(() => {
+      expect(within(calendarView).queryByText('반복 일정 캘린더 2024-10-15')).toBeInTheDocument();
+      expect(
+        within(calendarView).queryByText('반복 일정 캘린더 2024-10-17')
+      ).not.toBeInTheDocument();
+      expect(within(calendarView).queryByText('반복 일정 캘린더 2024-10-19')).toBeInTheDocument();
+    });
   });
 });

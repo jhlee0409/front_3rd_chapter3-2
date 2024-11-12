@@ -1,4 +1,4 @@
-import { act, logRoles, render, screen, within } from '@testing-library/react';
+import { act, render, screen, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import React from 'react';
 
@@ -159,7 +159,7 @@ describe('반복 일정 테스트', () => {
     expectDate: ['2024-10-15', '2026-10-15'],
   };
 
-  it.skip.each([dailyEvent, weeklyEvent, monthlyEvent, yearlyEvent])(
+  it.each([dailyEvent, weeklyEvent, monthlyEvent, yearlyEvent])(
     '$name 반복 일정 신규 생성 시 리스트에 정확히 노출된다.',
     async ({ type, interval, expectDate }) => {
       const _initialEvents = [...initialEvents];
@@ -195,7 +195,7 @@ describe('반복 일정 테스트', () => {
     }
   );
 
-  it.skip('반복 일정 신규 생성시 캘린더에 아이콘이 노출된다.', async () => {
+  it('반복 일정 신규 생성시 캘린더에 아이콘이 노출된다.', async () => {
     const _initialEvents = [...initialEvents];
     setupCreateHandler(_initialEvents);
 

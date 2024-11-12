@@ -36,17 +36,7 @@ export const useEventContext = () => {
 };
 
 export const EventProvider = ({ children }: { children: React.ReactNode }) => {
-  const formValues = useEventForm({
-    title: '새로운 일정',
-    date: '2024-11-15',
-    startTime: '10:00',
-    endTime: '11:00',
-    description: '새로운 일정 설명',
-    location: '새로운 장소',
-    category: '업무',
-    notificationTime: 10,
-    repeat: { type: 'daily', interval: 2, endDate: '2024-11-20' },
-  });
+  const formValues = useEventForm();
 
   const operationsValues = useEventOperations(Boolean(formValues.editingEvent), () =>
     formValues.setEditingEvent(null)

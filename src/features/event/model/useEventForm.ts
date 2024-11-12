@@ -2,11 +2,11 @@ import { ChangeEvent, useCallback, useMemo, useState } from 'react';
 
 import { createEventRepeatState } from '@/features/event/lib/eventUtils';
 import { getTimeErrorMessage } from '@/features/event/lib/timeValidation';
-import { Event } from '@/types';
+import { Event, EventForm } from '@/types';
 
 type TimeErrorRecord = Record<'startTimeError' | 'endTimeError', string | null>;
 
-export const useEventForm = (initialEvent?: Event) => {
+export const useEventForm = (initialEvent?: Event | EventForm) => {
   const initialState = useMemo(() => {
     return {
       title: initialEvent?.title || '',

@@ -1,9 +1,11 @@
-module.exports = {
-  projectId: '244xfm',
+const { defineConfig } = require('cypress');
 
+module.exports = defineConfig({
+  projectId: '244xfm',
   e2e: {
     setupNodeEvents(on, config) {
       // implement node event listeners here
     },
+    baseUrl: 'http://localhost:5173',
   },
-};
+});

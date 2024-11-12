@@ -14,7 +14,6 @@ export const EventAlert = () => {
   const cancelRef = useRef<HTMLButtonElement>(null);
 
   const handleSave = () => {
-    handleCloseOverlapDialog();
     const eventData = createEventFormData({
       startTime,
       endTime,
@@ -23,6 +22,7 @@ export const EventAlert = () => {
       editingEvent,
     });
     saveEvent(eventData);
+    handleCloseOverlapDialog();
   };
 
   return (

@@ -1,6 +1,7 @@
 import { Heading, Text, VStack } from '@chakra-ui/react';
 
 import { CalendarDayCell } from './CalendarDayCell';
+import { checkIsRepeatEvent } from '../lib/repeat';
 
 import { formatDate, formatWeek, getWeekDates, isEqualDate } from '@/features/event/lib/dateUtils';
 import { weekDays } from '@/shared/model/date-config';
@@ -56,8 +57,14 @@ export const WeekViewCalendar = ({
                     .filter((event) => isEqualDate(new Date(event.date), date))
                     .map((event) => {
                       const isNotified = notifiedEvents.includes(event.id);
+                      const isRepeatEvent = checkIsRepeatEvent(event);
                       return (
-                        <CalendarDayCell key={event.id} event={event} isNotified={isNotified} />
+                        <CalendarDayCell
+                          key={event.id}
+                          event={event}
+                          isNotified={isNotified}
+                          isRepeatEvent={isRepeatEvent}
+                        />
                       );
                     })}
                 </Table.Cell>

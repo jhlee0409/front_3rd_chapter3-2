@@ -21,7 +21,7 @@ type EventContextType = {
     isOverlapDialogOpen: boolean;
     handleCloseOverlapDialog: () => void;
     overlappingEvents: Event[];
-    handleOverlap: () => void;
+    hasOverlapEvent: () => boolean;
   };
 };
 
@@ -63,7 +63,7 @@ export const EventProvider = ({ children }: { children: React.ReactNode }) => {
     });
   }, [formValues]);
 
-  const handleOverlapDialogOpen = useCallback((events: Event[]) => {
+  const hasOverlapEventDialogOpen = useCallback((events: Event[]) => {
     setIsOverlapDialogOpen(true);
     setOverlappingEvents(events);
   }, []);
@@ -72,22 +72,23 @@ export const EventProvider = ({ children }: { children: React.ReactNode }) => {
     setIsOverlapDialogOpen(false);
   }, []);
 
-  const handleOverlap = useCallback(() => {
+  const hasOverlapEvent = useCallback(() => {
     const overlapping = findOverlappingEvents(eventFormData, operationsValues.events);
     if (overlapping.length > 0) {
-      handleOverlapDialogOpen(overlapping);
-      return;
+      hasOverlapEventDialogOpen(overlapping);
+      return true;
     }
-  }, [eventFormData, operationsValues.events, handleOverlapDialogOpen]);
+    return false;
+  }, [eventFormData, operationsValues.events, hasOverlapEventDialogOpen]);
 
   const state = useMemo(
     () => ({
       isOverlapDialogOpen,
       handleCloseOverlapDialog,
       overlappingEvents,
-      handleOverlap,
+      hasOverlapEvent,
     }),
-    [isOverlapDialogOpen, overlappingEvents, handleOverlap, handleCloseOverlapDialog]
+    [isOverlapDialogOpen, overlappingEvents, hasOverlapEvent, handleCloseOverlapDialog]
   );
 
   const values = useMemo(

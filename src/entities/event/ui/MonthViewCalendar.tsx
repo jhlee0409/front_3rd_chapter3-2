@@ -1,6 +1,7 @@
 import { Heading, Text, VStack } from '@chakra-ui/react';
 
 import { CalendarDayCell } from './CalendarDayCell';
+import { checkIsRepeatEvent } from '../lib/repeat';
 
 import {
   formatDate,
@@ -14,7 +15,6 @@ import { Event } from '@/types';
 
 type MonthViewCalendarProps = {
   currentDate: Date;
-
   events: Event[];
   notifiedEvents: string[];
   holidays: Record<string, string>;
@@ -67,8 +67,14 @@ export const MonthViewCalendar = ({
                         )}
                         {getEventsForDay(events, day).map((event) => {
                           const isNotified = notifiedEvents.includes(event.id);
+                          const isRepeatEvent = checkIsRepeatEvent(event);
                           return (
-                            <CalendarDayCell key={event.id} event={event} isNotified={isNotified} />
+                            <CalendarDayCell
+                              key={event.id}
+                              event={event}
+                              isNotified={isNotified}
+                              isRepeatEvent={isRepeatEvent}
+                            />
                           );
                         })}
                       </>

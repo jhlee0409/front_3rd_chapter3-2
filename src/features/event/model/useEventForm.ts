@@ -20,7 +20,7 @@ export const useEventForm = (initialEvent?: Event) => {
 
   const initialRepeatState = useMemo(() => {
     return {
-      isRepeating: !!(initialEvent?.repeat.type === 'none'),
+      isRepeating: initialEvent?.repeat.type !== 'none',
       repeatType: initialEvent?.repeat.type || 'none',
       repeatInterval: initialEvent?.repeat.interval || 1,
       repeatEndDate: initialEvent?.repeat.endDate || '',

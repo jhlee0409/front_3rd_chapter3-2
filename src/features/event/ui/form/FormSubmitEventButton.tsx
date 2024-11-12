@@ -3,15 +3,21 @@ import { Button, useToast } from '@chakra-ui/react';
 import { validateEvent } from '../../lib/eventValidate';
 import { useEventContext } from '../../model/EventContext';
 
+import { checkIsRepeatEvent } from '@/entities/event/lib/repeat';
+
 export const FormSubmitEventButton = () => {
   const { formValues, operationsValues, state } = useEventContext();
   const { startTimeError, endTimeError, editingEvent, resetForm, eventFormData } = formValues;
   const { saveEvent } = operationsValues;
-  const { handleOverlap } = state;
+  const { hasOverlapEvent } = state;
 
   const toast = useToast();
 
   const addOrUpdateEvent = async () => {
+    if (hasOverlapEvent()) {
+      return;
+    }
+
     const validationResult = validateEvent({
       event: eventFormData,
       error: {
@@ -38,8 +44,11 @@ export const FormSubmitEventButton = () => {
       });
       return;
     }
-    handleOverlap();
+
     await saveEvent(eventFormData);
+    if (checkIsRepeatEvent(eventFormData)) {
+      console.log('반복 일정');
+    }
     resetForm();
   };
 

@@ -1,4 +1,4 @@
-import { act, logRoles, render, screen, waitFor, within } from '@testing-library/react';
+import { act, render, screen, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import React from 'react';
 
@@ -150,7 +150,7 @@ describe('반복 일정 테스트', () => {
     expectDate: ['2024-10-15', '2026-10-15'],
   };
 
-  it.only.each([dailyEvent, weeklyEvent, monthlyEvent, yearlyEvent])(
+  it.each([dailyEvent, weeklyEvent, monthlyEvent, yearlyEvent])(
     '$name 반복 일정 생성 시 리스트에 정확히 노출된다.',
     async ({ type, interval, expectDate }) => {
       const _initialEvents = [...initialEvents];
@@ -210,7 +210,7 @@ describe('반복 일정 테스트', () => {
 
     const calendarView = screen.getByTestId('month-view');
 
-    await screen.findAllByText(/일정이 추가되었습니다./i);
+    await screen.findAllByText(/반복 일정이 추가되었습니다./i);
 
     expect(within(calendarView).getAllByText(/반복 일정 캘린더/i)).toHaveLength(9);
 

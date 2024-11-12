@@ -74,14 +74,14 @@ app.delete('/api/events/:id', async (req, res) => {
 app.post('/api/events-list', async (req, res) => {
   const events = await getEvents();
   const repeatId = randomUUID();
-  const newEvents = req.body.events.map((event) => {
+  const newEvents = req.body.events.map((event, i) => {
     const isRepeatEvent = event.repeat.type !== 'none';
     return {
-      id: randomUUID(),
       ...event,
+      id: randomUUID(),
       repeat: {
         ...event.repeat,
-        id: isRepeatEvent ? repeatId : undefined,
+        id: isRepeatEvent ? repeatId + i : undefined,
       },
     };
   });

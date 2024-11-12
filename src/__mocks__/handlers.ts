@@ -1,7 +1,12 @@
 import { http, HttpResponse } from 'msw';
 
 import { Event, EventForm } from '../types';
-import { createEventResolver, deleteEventResolver, updateEventResolver } from './handlersUtils';
+import {
+  createEventResolver,
+  createRepeatEventResolver,
+  deleteEventResolver,
+  updateEventResolver,
+} from './handlersUtils';
 import { events } from './response/events.json' assert { type: 'json' };
 
 // ! HARD
@@ -15,6 +20,12 @@ export const handlers = [
     const event = (await request.json()) as EventForm;
     const { newEventWithId } = createEventResolver(events as Event[], event);
     return HttpResponse.json(newEventWithId, { status: 201 });
+  }),
+
+  http.post('/api/events-list', async ({ request }) => {
+    const event = (await request.json()) as { events: EventForm[] };
+    const { newEvents } = createRepeatEventResolver(events as Event[], event.events);
+    return HttpResponse.json(newEvents, { status: 201 });
   }),
 
   http.put('/api/events/:id', async ({ request }) => {

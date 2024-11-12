@@ -6,6 +6,26 @@ import { Event, EventForm } from '../types';
 // ! Hard
 // ! 이벤트는 생성, 수정 되면 fetch를 다시 해 상태를 업데이트 합니다. 이를 위한 제어가 필요할 것 같은데요. 어떻게 작성해야 테스트가 병렬로 돌아도 안정적이게 동작할까요?
 // ! 아래 이름을 사용하지 않아도 되니, 독립적이게 테스트를 구동할 수 있는 방법을 찾아보세요. 그리고 이 로직을 PR에 설명해주세요.
+
+export const createRepeatEventResolver = (
+  initEvents = [] as Event[],
+  events: (EventForm | Event)[]
+) => {
+  const newEvents = events.map((event, i) => {
+    const isRepeatEvent = event.repeat.type !== 'none';
+    return {
+      ...event,
+      id: `${+initEvents[initEvents.length - 1].id + 1 + i}`,
+      repeat: {
+        ...event.repeat,
+        id: isRepeatEvent ? `${+initEvents[initEvents.length - 1].id + 1 + i}` + i : undefined,
+      },
+    };
+  });
+  initEvents.push(...newEvents);
+  return { list: initEvents, newEvents: [...initEvents, ...newEvents] };
+};
+
 export const createEventResolver = (initEvents = [] as Event[], event: EventForm) => {
   const newEventWithId = { ...event, id: `${+initEvents[initEvents.length - 1].id + 1}` };
   initEvents.push(newEventWithId);
@@ -42,6 +62,11 @@ export const setupCreateHandler = (initEvents = [] as Event[]) => {
       const event = (await request.json()) as EventForm;
       const { newEventWithId } = createEventResolver(_initEvents, event);
       return HttpResponse.json(newEventWithId, { status: 201 });
+    }),
+    http.post('/api/events-list', async ({ request }) => {
+      const event = (await request.json()) as { events: EventForm[] };
+      const { newEvents } = createRepeatEventResolver(_initEvents, event.events);
+      return HttpResponse.json(newEvents, { status: 201 });
     })
   );
 };

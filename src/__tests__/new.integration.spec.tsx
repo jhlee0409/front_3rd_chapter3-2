@@ -160,7 +160,7 @@ describe('반복 일정 테스트', () => {
   };
 
   it.skip.each([dailyEvent, weeklyEvent, monthlyEvent, yearlyEvent])(
-    '$name 반복 일정 생성 시 리스트에 정확히 노출된다.',
+    '$name 반복 일정 신규 생성 시 리스트에 정확히 노출된다.',
     async ({ type, interval, expectDate }) => {
       const _initialEvents = [...initialEvents];
       setupCreateHandler(_initialEvents);
@@ -195,7 +195,7 @@ describe('반복 일정 테스트', () => {
     }
   );
 
-  it.skip('반복 일정 적용 시 캘린더에 아이콘이 노출된다.', async () => {
+  it.skip('반복 일정 신규 생성시 캘린더에 아이콘이 노출된다.', async () => {
     const _initialEvents = [...initialEvents];
     setupCreateHandler(_initialEvents);
 
@@ -234,7 +234,7 @@ describe('반복 일정 테스트', () => {
     expect(within(calendarView).getByText('반복 일정 캘린더 2024-10-29')).toBeInTheDocument();
     expect(within(calendarView).getByText('반복 일정 캘린더 2024-10-31')).toBeInTheDocument();
   });
-  it('반복 종료일 설정시 정상 동작한다.', async () => {
+  it('반복 종료일 설정 신규 생성시 정상 동작한다.', async () => {
     const _initialEvents = [...initialEvents];
     setupCreateHandler(_initialEvents);
 

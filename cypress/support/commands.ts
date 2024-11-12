@@ -1,7 +1,7 @@
 import '@testing-library/cypress/add-commands';
 
 Cypress.Commands.add('addEvent', (data) => {
-  const { title, date, startTime, endTime, description, location, category, repeat } = data;
+  const { title, date, startTime, endTime, description, location, category } = data;
   // 제목 입력
   cy.findByLabelText('제목').type(title);
 

@@ -3,8 +3,6 @@ import { Button, useToast } from '@chakra-ui/react';
 import { validateEvent } from '../../lib/eventValidate';
 import { useEventContext } from '../../model/EventContext';
 
-import { checkIsRepeatEvent } from '@/entities/event/lib/repeat';
-
 export const FormSubmitEventButton = () => {
   const { formValues, operationsValues, state } = useEventContext();
   const { startTimeError, endTimeError, editingEvent, resetForm, eventFormData } = formValues;
@@ -46,9 +44,6 @@ export const FormSubmitEventButton = () => {
     }
 
     await saveEvent(eventFormData);
-    if (checkIsRepeatEvent(eventFormData)) {
-      console.log('반복 일정');
-    }
     resetForm();
   };
 

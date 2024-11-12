@@ -82,8 +82,6 @@ export const useEventOperations = (editing: boolean, onSave?: () => void) => {
       let response;
       const repeatEvents = createRepeatEventsByPattern([eventData]);
 
-      console.log(repeatEvents);
-
       if (isExist) {
         response = await fetch(`/api/events-list`, {
           method: 'PUT',

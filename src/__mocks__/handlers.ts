@@ -6,6 +6,7 @@ import {
   createRepeatEventResolver,
   deleteEventResolver,
   updateEventResolver,
+  updateRepeatEventResolver,
 } from './handlersUtils';
 import { events } from './response/events.json' assert { type: 'json' };
 
@@ -37,6 +38,12 @@ export const handlers = [
     }
 
     return HttpResponse.json(updatedEvent, { status });
+  }),
+
+  http.put('/api/events-list', async ({ request }) => {
+    const event = (await request.json()) as { events: Event[] };
+    const { updatedEvents } = updateRepeatEventResolver(events as Event[], event.events);
+    return HttpResponse.json(updatedEvents, { status: 200 });
   }),
 
   http.delete('/api/events/:id', ({ params }) => {

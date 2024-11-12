@@ -28,6 +28,19 @@ export const createRepeatEventResolver = (
   return { list: initEvents, newEvents: [...initEvents, ...newEvents] };
 };
 
+export const updateRepeatEventResolver = (initEvents = [] as Event[], events: Event[]) => {
+  let isUpdated = false;
+  const newEvents = [...events];
+  newEvents.forEach((event) => {
+    const eventIndex = initEvents.findIndex((target) => target.id === event.id);
+    if (eventIndex > -1) {
+      isUpdated = true;
+      newEvents[eventIndex] = { ...initEvents[eventIndex], ...event };
+    }
+  });
+  return { updatedEvents: newEvents, isUpdated };
+};
+
 // ================================================
 
 export const createEventResolver = (initEvents = [] as Event[], event: EventForm) => {
@@ -93,6 +106,16 @@ export const setupUpdateHandler = (initEvents = [] as Event[]) => {
       }
 
       return HttpResponse.json(updatedEvent, { status });
+    }),
+    http.put('/api/events-list', async ({ request }) => {
+      const event = (await request.json()) as { events: Event[] };
+      const { updatedEvents } = updateRepeatEventResolver(_initEvents, event.events);
+      return HttpResponse.json(updatedEvents, { status: 200 });
+    }),
+    http.post('/api/events-list', async ({ request }) => {
+      const event = (await request.json()) as { events: EventForm[] };
+      const { newEvents } = createRepeatEventResolver(_initEvents, event.events);
+      return HttpResponse.json(newEvents, { status: 201 });
     })
   );
 };

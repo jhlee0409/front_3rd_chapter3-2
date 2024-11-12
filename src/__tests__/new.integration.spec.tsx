@@ -387,4 +387,44 @@ describe('반복 일정 테스트', () => {
       expect(within(calendarView).queryByText('반복 일정 캘린더 2024-10-19')).toBeInTheDocument();
     });
   });
+  it('매달 반복 설정 시 31일의 경우 존재하지 않는 달은 건너뛴다.', async () => {
+    const _initialEvents = [...initialEvents];
+    setupCreateHandler(_initialEvents);
+
+    const newEvent = {
+      title: '새로운 일정',
+      date: '2024-10-31',
+      startTime: '10:00',
+      endTime: '11:00',
+      description: '새로운 일정 설명',
+      location: '새로운 장소',
+      category: '업무',
+      notificationTime: 10,
+      repeat: { type: 'monthly', interval: 1, endDate: '2025-10-31' },
+    } as EventForm;
+
+    renderComponent();
+
+    await act(async () => {
+      await saveEvent(newEvent);
+    });
+    const nextButton = screen.getByLabelText('Next');
+
+    const calendarView = screen.getByTestId('month-view');
+    expect(within(calendarView).getByText('반복 일정 캘린더 2024-10-31')).toBeInTheDocument();
+
+    await userEvent.click(nextButton);
+
+    expect(within(calendarView).queryByText('반복 일정 캘린더 2024-11-1')).not.toBeInTheDocument();
+    expect(within(calendarView).queryByText('반복 일정 캘린더 2024-11-2')).not.toBeInTheDocument();
+    expect(within(calendarView).queryByText('반복 일정 캘린더 2024-11-3')).not.toBeInTheDocument();
+    expect(within(calendarView).queryByText('반복 일정 캘린더 2024-11-31')).not.toBeInTheDocument();
+
+    await userEvent.click(nextButton);
+
+    expect(within(calendarView).queryByText('반복 일정 캘린더 2024-12-1')).not.toBeInTheDocument();
+    expect(within(calendarView).queryByText('반복 일정 캘린더 2024-12-2')).not.toBeInTheDocument();
+    expect(within(calendarView).queryByText('반복 일정 캘린더 2024-12-3')).not.toBeInTheDocument();
+    expect(within(calendarView).getByText('반복 일정 캘린더 2024-12-31')).toBeInTheDocument();
+  });
 });

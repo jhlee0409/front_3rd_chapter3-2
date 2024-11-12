@@ -7,6 +7,13 @@ export const diffDate = (date1: Date, date2: Date) => {
   return date1.getTime() - date2.getTime();
 };
 
+// 기준 날짜와 비교 날짜의 일자가 같은지 확인
+export const skipDateByBaseDay = (baseDate: string, targetDate: string) => {
+  const baseDay = new Date(baseDate).getDate();
+  const targetDay = new Date(targetDate).getDate();
+  return baseDay === targetDay;
+};
+
 // endDate가 있을 때 date가 종료일을 넘었는지 확인
 export const checkIsOverEnd = (date: string, endDate?: string) => {
   return endDate ? diffDate(new Date(date), new Date(endDate)) > 0 : false;
@@ -90,13 +97,17 @@ export const createWeeklyRepeatEvents = (event: Event | EventForm) => {
 
 export const createMonthlyRepeatEvents = (event: Event | EventForm) => {
   const { count, interval } = createRepeatEventsData(event);
-  const monthlyEvents = createRepeatEvents(event, count, interval);
+  const monthlyEvents = createRepeatEvents(event, count, interval).filter((event, _, arr) =>
+    skipDateByBaseDay(arr[0].date, event.date)
+  );
   return monthlyEvents;
 };
 
 export const createYearlyRepeatEvents = (event: Event | EventForm) => {
   const { count, interval } = createRepeatEventsData(event);
-  const yearlyEvents = createRepeatEvents(event, count, interval);
+  const yearlyEvents = createRepeatEvents(event, count, interval).filter((event, _, arr) =>
+    skipDateByBaseDay(arr[0].date, event.date)
+  );
   return yearlyEvents;
 };
 // ================================================

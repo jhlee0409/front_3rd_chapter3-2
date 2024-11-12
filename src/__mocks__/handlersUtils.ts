@@ -15,12 +15,10 @@ export const createRepeatEventResolver = (
     const isRepeatEvent = event.repeat.type !== 'none';
     return {
       ...event,
-      id: `${+initEvents[initEvents.length - 1].id + 1 + i}`,
+      id: `${+initEvents[initEvents.length - 1].id + 1}-${i}`,
       repeat: {
         ...event.repeat,
-        id: isRepeatEvent
-          ? `repeat-${+initEvents[initEvents.length - 1].id + 1 + i}-${i}`
-          : undefined,
+        id: isRepeatEvent ? `repeat-${+initEvents[initEvents.length - 1].id + 1}-${i}` : undefined,
       },
     };
   });

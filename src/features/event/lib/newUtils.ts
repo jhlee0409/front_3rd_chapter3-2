@@ -30,6 +30,7 @@ export const calculateDaysBetween = (startDate: Date, endDate: Date): number => 
 
 export const defaultEndDate = (): Record<RepeatType, Date> => {
   // 2030년까지
+  // 필요에 따라 커스텀 가능
   return {
     none: new Date(2030, 12, 31),
     daily: new Date(2030, 12, 31),
@@ -41,28 +42,38 @@ export const defaultEndDate = (): Record<RepeatType, Date> => {
 
 // interval 계산을 위한 함수
 export const divideCountByType = (count: number, type: RepeatType) => {
-  if (type === 'daily') return count;
-  if (type === 'weekly') return count / 7;
-  if (type === 'monthly') return count / 30;
-  if (type === 'yearly') return count / 365;
-  return 0;
+  switch (type) {
+    case 'daily':
+      return count;
+    case 'weekly':
+      return count / 7;
+    case 'monthly':
+      return count / 30;
+    case 'yearly':
+      return count / 365;
+    default:
+      return 0;
+  }
 };
 
 // 반복 일정 생성을 위한 날짜 생성
 export const newRepeatDate = (eDate: Date, type: RepeatType, i: number, interval: number) => {
-  if (type === 'daily')
-    return new Date(eDate.getFullYear(), eDate.getMonth(), eDate.getDate() + i * interval);
-  if (type === 'weekly')
-    return new Date(eDate.getFullYear(), eDate.getMonth(), eDate.getDate() + i * interval * 7);
-  if (type === 'monthly')
-    return new Date(eDate.getFullYear(), eDate.getMonth() + i * interval, eDate.getDate());
-  if (type === 'yearly')
-    return new Date(eDate.getFullYear() + i * interval, eDate.getMonth(), eDate.getDate());
-  return new Date();
+  switch (type) {
+    case 'daily':
+      return new Date(eDate.getFullYear(), eDate.getMonth(), eDate.getDate() + i * interval);
+    case 'weekly':
+      return new Date(eDate.getFullYear(), eDate.getMonth(), eDate.getDate() + i * interval * 7);
+    case 'monthly':
+      return new Date(eDate.getFullYear(), eDate.getMonth() + i * interval, eDate.getDate());
+    case 'yearly':
+      return new Date(eDate.getFullYear() + i * interval, eDate.getMonth(), eDate.getDate());
+    default:
+      return new Date();
+  }
 };
 
 // 반복 일정 생성을 위한 데이터 생성
-export const createRepeatEventsData = (event: Event | EventForm) => {
+export const createDataForRepeat = (event: Event | EventForm) => {
   const eDate = new Date(event.date);
   const lastDate = event.repeat.endDate
     ? new Date(event.repeat.endDate)
@@ -70,7 +81,7 @@ export const createRepeatEventsData = (event: Event | EventForm) => {
   const count = divideCountByType(calculateDaysBetween(eDate, lastDate), event.repeat.type);
   const interval = event.repeat.interval;
 
-  return { count, interval, newRepeatDate };
+  return { count, interval };
 };
 
 // 반복 일정 패턴에 따른 반복 일정 생성을 위한 데이터 생성
@@ -84,28 +95,30 @@ export const createRepeatEvents = (event: Event | EventForm, count: number, inte
 // 반복 일정 타입에 따른 반복 일정 생성
 // ================================================
 export const createDailyRepeatEvents = (event: Event | EventForm) => {
-  const { count, interval } = createRepeatEventsData(event);
+  const { count, interval } = createDataForRepeat(event);
   const dailyEvents = createRepeatEvents(event, count, interval);
   return dailyEvents;
 };
 
 export const createWeeklyRepeatEvents = (event: Event | EventForm) => {
-  const { count, interval } = createRepeatEventsData(event);
+  const { count, interval } = createDataForRepeat(event);
   const weeklyEvents = createRepeatEvents(event, count, interval);
   return weeklyEvents;
 };
 
 export const createMonthlyRepeatEvents = (event: Event | EventForm) => {
-  const { count, interval } = createRepeatEventsData(event);
+  const { count, interval } = createDataForRepeat(event);
   const monthlyEvents = createRepeatEvents(event, count, interval).filter((event, _, arr) =>
+    // 원하는 필터 조건 넣기
     skipDateByBaseDay(arr[0].date, event.date)
   );
   return monthlyEvents;
 };
 
 export const createYearlyRepeatEvents = (event: Event | EventForm) => {
-  const { count, interval } = createRepeatEventsData(event);
+  const { count, interval } = createDataForRepeat(event);
   const yearlyEvents = createRepeatEvents(event, count, interval).filter((event, _, arr) =>
+    // 원하는 필터 조건 넣기
     skipDateByBaseDay(arr[0].date, event.date)
   );
   return yearlyEvents;
@@ -116,10 +129,18 @@ export const createYearlyRepeatEvents = (event: Event | EventForm) => {
 export const createRepeatEventsByType = (
   event: Event | EventForm
 ): (Event | EventForm)[] | undefined => {
-  if (event.repeat.type === 'daily') return createDailyRepeatEvents(event);
-  if (event.repeat.type === 'weekly') return createWeeklyRepeatEvents(event);
-  if (event.repeat.type === 'monthly') return createMonthlyRepeatEvents(event);
-  if (event.repeat.type === 'yearly') return createYearlyRepeatEvents(event);
+  switch (event.repeat.type) {
+    case 'daily':
+      return createDailyRepeatEvents(event);
+    case 'weekly':
+      return createWeeklyRepeatEvents(event);
+    case 'monthly':
+      return createMonthlyRepeatEvents(event);
+    case 'yearly':
+      return createYearlyRepeatEvents(event);
+    default:
+      return undefined;
+  }
 };
 
 // 반복 일정 패턴에 따른 반복 일정 생성

@@ -120,6 +120,7 @@ export const FormEvent = () => {
       <FormControl>
         <FormLabel>반복 설정</FormLabel>
         <Checkbox
+          data-testid="is-repeat-checkbox"
           isChecked={repeatState.isRepeating}
           onChange={(e) => handleRepeatChange('isRepeating', e.target.checked)}
         >
@@ -130,6 +131,7 @@ export const FormEvent = () => {
       <FormControl>
         <FormLabel>알림 설정</FormLabel>
         <Select
+          data-testid="notification-select"
           value={formState.notificationTime}
           onChange={(e) => handleEventChange('notificationTime', +e.target.value)}
         >

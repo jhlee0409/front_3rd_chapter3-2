@@ -1,7 +1,17 @@
 import '@testing-library/cypress/add-commands';
 
 Cypress.Commands.add('addEvent', (data) => {
-  const { title, date, startTime, endTime, description, location, category } = data;
+  const {
+    title,
+    date,
+    startTime,
+    endTime,
+    description,
+    location,
+    category,
+    notificationTime,
+    repeat,
+  } = data;
   // 제목 입력
   cy.findByLabelText('제목').type(title);
 
@@ -23,12 +33,125 @@ Cypress.Commands.add('addEvent', (data) => {
   // 카테고리 선택
   cy.findByLabelText('카테고리').select(category);
 
+  // 알림 설정
+  cy.findByTestId('notification-select').select(notificationTime.toString());
+
   // 반복 설정
-  cy.get('.chakra-checkbox__label').click();
-  cy.findByRole('button', { name: /일정 추가/i }).click();
+  cy.findByTestId('is-repeat-checkbox').click();
+
+  if (repeat.type !== 'none') {
+    // 반복 유형 선택
+    cy.findByTestId('repeat-select').select(repeat.type);
+    // 반복 간격 설정
+    cy.findByTestId('repeat-interval').type(repeat.interval.toString());
+
+    // 반복 종료일 설정
+    cy.findByTestId('repeat-end-date').type(repeat.endDate ?? '');
+  }
+  // 일정 추가 버튼 클릭
+  cy.findByTestId('event-submit-button').click();
 });
 
-Cypress.Commands.add('checkEvent', (view, title) => {
+Cypress.Commands.add('eventFormTitle', (title) => {
+  cy.findByRole('heading', { name: title, level: 2 });
+});
+
+Cypress.Commands.add('findSearchedEvent', (title) => {
+  cy.findByTestId('event-list').findByText(title).parent().parent().parent();
+});
+
+Cypress.Commands.add('deleteEvent', (title) => {
+  cy.findByTestId('event-list')
+    .findByText(title)
+    .parent()
+    .parent()
+    .parent()
+    .findByLabelText('Delete event')
+    .click();
+});
+
+Cypress.Commands.add('checkEvent', (view, title, hasEvent) => {
   const viewTestId = view === 'month' ? 'month-view' : 'week-view';
-  cy.findByTestId(viewTestId).findByText(title).should('be.visible');
+  if (hasEvent) {
+    cy.findByTestId(viewTestId).findByText(title).should('be.visible');
+  } else {
+    cy.findByTestId(viewTestId).findByText(title).should('not.exist');
+  }
+});
+
+Cypress.Commands.add('editEvent', (data) => {
+  const {
+    title,
+    date,
+    startTime,
+    endTime,
+    description,
+    location,
+    category,
+    notificationTime,
+    repeat,
+  } = data;
+  // 제목 입력
+  if (title) {
+    cy.findByLabelText('제목').clear();
+    cy.findByLabelText('제목').type(title);
+  }
+
+  // 날짜 선택
+  if (date) {
+    cy.findByLabelText('날짜').clear();
+    cy.findByLabelText('날짜').type(date);
+  }
+
+  // 시작 시간 선택
+  if (startTime) {
+    cy.findByLabelText('시작 시간').clear();
+    cy.findByLabelText('시작 시간').type(startTime);
+  }
+
+  // 종료 시간 선택
+  if (endTime) {
+    cy.findByLabelText('종료 시간').clear();
+    cy.findByLabelText('종료 시간').type(endTime);
+  }
+
+  // 설명 입력
+  if (description) {
+    cy.findByLabelText('설명').clear();
+    cy.findByLabelText('설명').type(description);
+  }
+
+  // 위치 입력
+  if (location) {
+    cy.findByLabelText('위치').clear();
+    cy.findByLabelText('위치').type(location);
+  }
+
+  // 카테고리 선택
+  if (category) {
+    cy.findByLabelText('카테고리').select(category);
+  }
+
+  // 알림 설정
+  if (notificationTime) {
+    cy.findByTestId('notification-select').select(notificationTime.toString());
+  }
+
+  // 반복 설정
+  if (repeat) {
+    cy.findByTestId('is-repeat-checkbox').click();
+  }
+  if (repeat && repeat.type !== 'none') {
+    // 반복 유형 선택
+    cy.findByTestId('repeat-select').select(repeat.type);
+    // 반복 간격 설정
+    cy.findByTestId('repeat-interval').clear();
+    cy.findByTestId('repeat-interval').type(repeat.interval.toString());
+
+    // 반복 종료일 설정
+    cy.findByTestId('repeat-end-date').clear();
+    cy.findByTestId('repeat-end-date').type(repeat.endDate ?? '');
+  }
+  // 일정 추가 버튼 클릭
+  cy.findByTestId('event-submit-button').click();
 });

@@ -1,4 +1,6 @@
 /* eslint-disable no-unused-vars */
+type RepeatType = 'none' | 'daily' | 'weekly' | 'monthly' | 'yearly';
+
 type EventData = {
   title: string;
   date: string;
@@ -7,13 +9,23 @@ type EventData = {
   description: string;
   location: string;
   category: string;
-  repeat: boolean;
   exceptionDates?: string[];
+  notificationTime: number;
+  repeat: {
+    type: RepeatType;
+    interval: number;
+    endDate?: string;
+  };
+  id?: string;
 };
 
 declare namespace Cypress {
   interface Chainable {
     addEvent(data: EventData): Chainable<Element>;
-    checkEvent(view: 'month' | 'week', title: string): Chainable<Element>;
+    editEvent(data: Partial<EventData>): Chainable<Element>;
+    deleteEvent(title: string): Chainable<Element>;
+    findSearchedEvent(title: string): Chainable<Element>;
+    checkEvent(view: 'month' | 'week', title: string, hasEvent: boolean): Chainable<Element>;
+    eventFormTitle(title: string): Chainable<Element>;
   }
 }

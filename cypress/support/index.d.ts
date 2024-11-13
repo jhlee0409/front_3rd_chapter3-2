@@ -27,5 +27,7 @@ declare namespace Cypress {
     findSearchedEvent(title: string): Chainable<Element>;
     checkEvent(view: 'month' | 'week', title: string, hasEvent: boolean): Chainable<Element>;
     eventFormTitle(title: string): Chainable<Element>;
+    navigateTo(direction: 'next' | 'prev'): Chainable<Element>;
+    findSearchedEvent(title: string): Chainable<Element>;
   }
 }

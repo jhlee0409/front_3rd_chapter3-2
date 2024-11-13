@@ -10,6 +10,7 @@ const CalendarViewSelector = () => {
   return (
     <HStack mx="auto" justifyContent="space-between">
       <IconButton
+        data-testid="prev-month-button"
         aria-label="Previous"
         icon={<ChevronLeftIcon />}
         onClick={() => navigate('prev')}
@@ -22,7 +23,12 @@ const CalendarViewSelector = () => {
         <option value="week">Week</option>
         <option value="month">Month</option>
       </Select>
-      <IconButton aria-label="Next" icon={<ChevronRightIcon />} onClick={() => navigate('next')} />
+      <IconButton
+        data-testid="next-month-button"
+        aria-label="Next"
+        icon={<ChevronRightIcon />}
+        onClick={() => navigate('next')}
+      />
     </HStack>
   );
 };

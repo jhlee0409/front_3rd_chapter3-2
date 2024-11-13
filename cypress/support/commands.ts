@@ -70,6 +70,14 @@ Cypress.Commands.add('deleteEvent', (title) => {
     .click();
 });
 
+Cypress.Commands.add('navigateTo', (direction) => {
+  if (direction === 'next') {
+    cy.findByTestId('next-month-button').click();
+  } else {
+    cy.findByTestId('prev-month-button').click();
+  }
+});
+
 Cypress.Commands.add('checkEvent', (view, title, hasEvent) => {
   const viewTestId = view === 'month' ? 'month-view' : 'week-view';
   if (hasEvent) {

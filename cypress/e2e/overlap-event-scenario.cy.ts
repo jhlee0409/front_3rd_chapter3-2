@@ -6,8 +6,6 @@ describe('겹치는 일정 추가에 대한 시나리오 테스트', () => {
   beforeEach(() => {
     cy.visit('/');
     cy.task('resetDb');
-    // 이전 테스트에서 추가한 일정을 미리 추가하여 경고창을 띄우는 상태를 유지
-    cy.findByText('일정 로딩 완료!').should('be.visible');
 
     cy.addEvent({
       title: '일정 한번 추가해보자',

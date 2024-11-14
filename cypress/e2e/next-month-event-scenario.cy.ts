@@ -1,24 +1,24 @@
-import { formatDate } from '../support/utils';
-
 before(() => {
   cy.task('resetDb');
+  const now = new Date(2024, 10, 13);
+  cy.clock(now.getTime());
 });
 
-describe('다음달에 추가한 일정 시나리오 테스트', () => {
+afterEach(() => {
+  cy.clock().then((clock) => {
+    clock.restore();
+  });
+});
+
+describe('다음 달에 추가한 일정 시나리오 테스트', () => {
   beforeEach(() => {
     cy.visit('/');
   });
 
   it('다음 달에 일정을 추가합니다.', () => {
-    const currentDate = formatDate(new Date(), 13);
-    const nextMonthDate = new Date(currentDate);
-    nextMonthDate.setMonth(nextMonthDate.getMonth() + 1);
-
-    const formattedNextMonthDate = formatDate(nextMonthDate);
-
     cy.addEvent({
       title: '일정 한번 추가해보자',
-      date: formattedNextMonthDate,
+      date: '2024-12-13',
       startTime: '10:00',
       endTime: '11:00',
       description: '일정 한번 추가해보자 설명',
@@ -33,14 +33,13 @@ describe('다음달에 추가한 일정 시나리오 테스트', () => {
     cy.checkEvent('month', '일정 한번 추가해보자', 'visible');
   });
   it('추가된 일정을 이전 달로 수정합니다.', () => {
-    const currentDate = formatDate(new Date(), 13);
-
+    // 한달 뒤
     cy.navigateTo('next');
     cy.findSearchedEvent('일정 한번 추가해보자').findByLabelText('Edit event').click();
     cy.eventFormTitle('일정 수정').should('be.visible');
     cy.editEvent({
       title: '일정 한번 수정해보자',
-      date: currentDate,
+      date: '2024-11-13',
     });
     cy.navigateTo('prev');
 

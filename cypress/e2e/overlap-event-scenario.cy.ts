@@ -1,10 +1,20 @@
 before(() => {
   cy.task('resetDb');
+
+  const now = new Date(2024, 10, 13);
+  cy.clock(now.getTime());
+});
+
+after(() => {
+  cy.clock().then((clock) => {
+    clock.restore();
+  });
 });
 
 describe('겹치는 일정 추가에 대한 시나리오 테스트', () => {
   beforeEach(() => {
     cy.visit('/');
+
     cy.task('resetDb');
 
     cy.addEvent({

@@ -1,5 +1,12 @@
 before(() => {
   cy.task('resetDb');
+  const now = new Date(2024, 10, 13);
+  cy.clock(now.getTime());
+});
+after(() => {
+  cy.clock().then((clock) => {
+    clock.restore();
+  });
 });
 
 describe('일반적인 일정 시나리오 테스트', () => {

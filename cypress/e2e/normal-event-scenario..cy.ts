@@ -1,4 +1,3 @@
-/* eslint-disable cypress/no-unnecessary-waiting */
 before(() => {
   cy.task('resetDb');
 });

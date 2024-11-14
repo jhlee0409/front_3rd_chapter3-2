@@ -32,11 +32,11 @@ export const defaultEndDate = (): Record<RepeatType, Date> => {
   // 2030년까지
   // 필요에 따라 커스텀 가능
   return {
-    none: new Date(2030, 12, 31),
-    daily: new Date(2030, 12, 31),
-    weekly: new Date(2030, 12, 31),
-    monthly: new Date(2030, 12, 31),
-    yearly: new Date(2030, 12, 31),
+    none: new Date(2024, 12, 30),
+    daily: new Date(2024, 12, 30),
+    weekly: new Date(2024, 12, 30),
+    monthly: new Date(2024, 12, 30),
+    yearly: new Date(2026, 12, 30),
   };
 };
 
@@ -80,6 +80,7 @@ export const createDataForRepeat = (event: Event | EventForm) => {
     : defaultEndDate()[event.repeat.type];
   const count = divideCountByType(calculateDaysBetween(eDate, lastDate), event.repeat.type);
   const interval = event.repeat.interval;
+  console.log(lastDate, count, interval);
 
   return { count, interval };
 };

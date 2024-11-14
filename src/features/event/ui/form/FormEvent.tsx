@@ -105,6 +105,7 @@ export const FormEvent = () => {
       <FormControl>
         <FormLabel>카테고리</FormLabel>
         <Select
+          data-testid="category-select"
           value={formState.category}
           onChange={(e) => handleEventChange('category', e.target.value)}
         >

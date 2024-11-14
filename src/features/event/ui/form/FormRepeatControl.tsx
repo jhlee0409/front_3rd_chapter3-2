@@ -28,7 +28,7 @@ export const FormRepeatControl = () => {
             data-testid="repeat-interval"
             type="number"
             value={repeatState.repeatInterval}
-            onChange={(e) => handleRepeatChange('repeatInterval', +e.target.value)}
+            onChange={(e) => handleRepeatChange('repeatInterval', e.target.value)}
             min={1}
           />
         </FormControl>

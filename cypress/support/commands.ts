@@ -31,22 +31,37 @@ Cypress.Commands.add('addEvent', (data) => {
   cy.findByLabelText('위치').type(location);
 
   // 카테고리 선택
-  cy.findByLabelText('카테고리').select(category);
+  cy.findByTestId('category-select').select(category);
 
   // 알림 설정
   cy.findByTestId('notification-select').select(notificationTime.toString());
 
   // 반복 설정
-  cy.findByTestId('is-repeat-checkbox').click();
+  cy.findByTestId('is-repeat-checkbox')
+    .should('exist')
+    .then(($checkbox) => {
+      const isChecked = $checkbox.children().prop('checked');
+      cy.log(`Checkbox is checked: ${isChecked}`);
+      if (repeat.type !== 'none' && !isChecked) {
+        cy.findByTestId('is-repeat-checkbox').click();
+      }
+
+      if (repeat.type === 'none' && isChecked) {
+        cy.findByTestId('is-repeat-checkbox').click();
+      }
+    });
 
   if (repeat.type !== 'none') {
     // 반복 유형 선택
     cy.findByTestId('repeat-select').select(repeat.type);
     // 반복 간격 설정
+    cy.findByTestId('repeat-interval').clear();
     cy.findByTestId('repeat-interval').type(repeat.interval.toString());
 
     // 반복 종료일 설정
-    cy.findByTestId('repeat-end-date').type(repeat.endDate ?? '');
+    if (repeat.endDate) {
+      cy.findByTestId('repeat-end-date').type(repeat.endDate);
+    }
   }
   // 일정 추가 버튼 클릭
   cy.findByTestId('event-submit-button').click();
@@ -58,6 +73,10 @@ Cypress.Commands.add('eventFormTitle', (title) => {
 
 Cypress.Commands.add('findSearchedEvent', (title) => {
   cy.findByTestId('event-list').findByText(title).parent().parent().parent();
+});
+
+Cypress.Commands.add('findAllSearchedEvent', (title) => {
+  cy.findByTestId('event-list').findAllByText(title).parent().parent().parent();
 });
 
 Cypress.Commands.add('deleteEvent', (title) => {
@@ -78,10 +97,14 @@ Cypress.Commands.add('navigateTo', (direction) => {
   }
 });
 
-Cypress.Commands.add('checkEvent', (view, title, hasEvent) => {
+Cypress.Commands.add('checkEvent', (view, title, hasEvent, multiple) => {
   const viewTestId = view === 'month' ? 'month-view' : 'week-view';
   if (hasEvent) {
-    cy.findByTestId(viewTestId).findByText(title).should('be.visible');
+    if (multiple) {
+      cy.findByTestId(viewTestId).findAllByText(title).should('have.length', multiple);
+    } else {
+      cy.findByTestId(viewTestId).findByText(title).should('be.visible');
+    }
   } else {
     cy.findByTestId(viewTestId).findByText(title).should('not.exist');
   }

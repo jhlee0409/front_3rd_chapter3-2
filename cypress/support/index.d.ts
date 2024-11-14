@@ -23,11 +23,17 @@ declare namespace Cypress {
   interface Chainable {
     addEvent(data: EventData): Chainable<Element>;
     editEvent(data: Partial<EventData>): Chainable<Element>;
-    deleteEvent(title: string): Chainable<Element>;
-    findSearchedEvent(title: string): Chainable<Element>;
-    checkEvent(view: 'month' | 'week', title: string, hasEvent: boolean): Chainable<Element>;
-    eventFormTitle(title: string): Chainable<Element>;
+    deleteEvent(title: string | RegExp): Chainable<Element>;
+    findSearchedEvent(title: string | RegExp): Chainable<Element>;
+    findAllSearchedEvent(title: string | RegExp): Chainable<Element>;
+    checkEvent(
+      view: 'month' | 'week',
+      title: string | RegExp,
+      hasEvent: boolean,
+      multiple?: number
+    ): Chainable<Element>;
+    eventFormTitle(title: string | RegExp): Chainable<Element>;
     navigateTo(direction: 'next' | 'prev'): Chainable<Element>;
-    findSearchedEvent(title: string): Chainable<Element>;
+    findSearchedEvent(title: string | RegExp): Chainable<Element>;
   }
 }

@@ -84,7 +84,7 @@ Cypress.Commands.add('deleteEvent', (title) => {
     .findByText(title)
     .closest('[data-testid="event-item"]')
     .findByLabelText('Delete event')
-    .click();
+    .click({ force: true });
 });
 
 Cypress.Commands.add('navigateTo', (direction) => {

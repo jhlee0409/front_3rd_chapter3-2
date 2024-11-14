@@ -1,3 +1,4 @@
+/* eslint-disable cypress/no-unnecessary-waiting */
 before(() => {
   cy.task('resetDb');
 });
@@ -6,6 +7,7 @@ describe('일반적인 일정 시나리오 테스트', () => {
   beforeEach(() => {
     cy.visit('/');
     // 꼬임 방직를 위해 일정이 로딩된 후 작업 시작
+    cy.wait(1000);
     cy.findByText('일정 로딩 완료!').should('be.visible');
   });
 

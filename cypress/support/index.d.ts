@@ -29,7 +29,7 @@ declare namespace Cypress {
     checkEvent(
       view: 'month' | 'week',
       title: string | RegExp,
-      hasEvent: boolean,
+      type: 'visible' | 'invisible',
       multiple?: number
     ): Chainable<Element>;
     eventFormTitle(title: string | RegExp): Chainable<Element>;

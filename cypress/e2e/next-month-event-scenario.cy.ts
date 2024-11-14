@@ -32,7 +32,7 @@ describe('다음달에 추가한 일정 시나리오 테스트', () => {
 
     cy.navigateTo('next');
 
-    cy.checkEvent('month', '일정 한번 추가해보자', true);
+    cy.checkEvent('month', '일정 한번 추가해보자', 'visible');
   });
   it('추가된 일정을 이전 달로 수정합니다.', () => {
     const currentDate = formatDate(new Date(), 13);
@@ -46,13 +46,13 @@ describe('다음달에 추가한 일정 시나리오 테스트', () => {
     });
     cy.navigateTo('prev');
 
-    cy.checkEvent('month', '일정 한번 수정해보자', true);
+    cy.checkEvent('month', '일정 한번 수정해보자', 'visible');
   });
 
   it('방금 수정한 일정을 삭제합니다.', () => {
     cy.deleteEvent('일정 한번 수정해보자');
 
-    cy.checkEvent('month', '일정 한번 수정해보자', false);
+    cy.checkEvent('month', '일정 한번 수정해보자', 'invisible');
 
     cy.findByText('일정이 삭제되었습니다.').should('be.visible');
   });

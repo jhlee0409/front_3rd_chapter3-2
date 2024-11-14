@@ -97,9 +97,9 @@ Cypress.Commands.add('navigateTo', (direction) => {
   }
 });
 
-Cypress.Commands.add('checkEvent', (view, title, hasEvent, multiple) => {
+Cypress.Commands.add('checkEvent', (view, title, type, multiple) => {
   const viewTestId = view === 'month' ? 'month-view' : 'week-view';
-  if (hasEvent) {
+  if (type === 'visible') {
     if (multiple) {
       cy.findByTestId(viewTestId).findAllByText(title).should('have.length', multiple);
     } else {

@@ -22,7 +22,7 @@ describe('일반적인 일정 시나리오 테스트', () => {
       notificationTime: 10,
     });
 
-    cy.checkEvent('month', '일정 한번 추가해보자', true);
+    cy.checkEvent('month', '일정 한번 추가해보자', 'visible');
     cy.findSearchedEvent(/2024-11-13/i).should('be.visible');
     cy.findSearchedEvent(/10:11/i).should('be.visible');
     cy.findSearchedEvent(/11:11/i).should('be.visible');
@@ -40,13 +40,13 @@ describe('일반적인 일정 시나리오 테스트', () => {
       title: '일정 한번 수정해보자',
     });
 
-    cy.checkEvent('month', '일정 한번 수정해보자', true);
+    cy.checkEvent('month', '일정 한번 수정해보자', 'visible');
   });
 
   it('방금 수정한 일정을 삭제합니다.', () => {
     cy.deleteEvent('일정 한번 수정해보자');
 
-    cy.checkEvent('month', '일정 한번 수정해보자', false);
+    cy.checkEvent('month', '일정 한번 수정해보자', 'invisible');
 
     cy.findByText('일정이 삭제되었습니다.').should('be.visible');
   });

@@ -72,19 +72,17 @@ Cypress.Commands.add('eventFormTitle', (title) => {
 });
 
 Cypress.Commands.add('findSearchedEvent', (title) => {
-  cy.findByTestId('event-list').findByText(title).parent().parent().parent();
+  cy.findByTestId('event-list').findByText(title).closest('[data-testid="event-item"]');
 });
 
 Cypress.Commands.add('findAllSearchedEvent', (title) => {
-  cy.findByTestId('event-list').findAllByText(title).parent().parent().parent();
+  cy.findByTestId('event-list').findAllByText(title).closest('[data-testid="event-item"]');
 });
 
 Cypress.Commands.add('deleteEvent', (title) => {
   cy.findByTestId('event-list')
     .findByText(title)
-    .parent()
-    .parent()
-    .parent()
+    .closest('[data-testid="event-item"]')
     .findByLabelText('Delete event')
     .click();
 });
